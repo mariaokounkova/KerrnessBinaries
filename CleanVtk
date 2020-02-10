@@ -1,0 +1,21 @@
+#!/bin/bash
+
+FILE=DataVtk.pvd
+CF=DataVtkCleaned.pvd
+
+## Prologue
+echo "<?xml version=\"1.0\"?>" >> $CF
+echo "<VTKFile type=\"Collection\" version=\"0.1\" byte_order=\"LittleEndian\">"  >> $CF
+echo "  <Collection>" >> $CF
+
+## Data
+grep -e "DataSet" $FILE >> $CF
+
+## Epilogue
+echo "  </Collection>" >> $CF
+echo "</VTKFile>" >> $CF
+
+## Move
+mv $CF $FILE
+
+
