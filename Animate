@@ -1,3 +1,7 @@
 #!/bin/bash
-~/ffmpeg -start_number 0040 -i ${1}.%4d.png -c:v libx264 -vf fps=10 -pix_fmt yuv420p ${1}.mp4
+
+## 1 is the image / movie name
+## 2 is the first step of the animation
+
+~/ffmpeg -start_number ${2} -i ${1}.%4d.png -c:v libx264 -vf fps=10 -pix_fmt yuv420p ${1}.mp4
 #~/ffmpeg -i ${1}.%04d.png -c:v libx264  -pix_fmt yuv420p ${1}.mp4
