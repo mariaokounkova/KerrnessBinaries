@@ -2,7 +2,7 @@
   <ServerManagerState version="5.8.0">
     <Proxy group="animation" type="AnimationScene" id="263" servers="16">
       <Property name="AnimationTime" id="263.AnimationTime" number_of_elements="1">
-        <Element index="0" value="1147"/>
+        <Element index="0" value="1245"/>
       </Property>
       <Property name="Cues" id="263.Cues" number_of_elements="1">
         <Proxy value="265"/>
@@ -5516,7 +5516,7 @@
         <Element index="1" value=""/>
         <Element index="2" value=""/>
         <Element index="3" value="0"/>
-        <Element index="4" value="TypeD2Abs"/>
+        <Element index="4" value="Kerr1Abs"/>
         <Domain name="array_list" id="14382.ColorArrayName.array_list">
           <String text="Kerr1Abs"/>
           <String text="Kerr1AbsNormed"/>
@@ -5631,7 +5631,7 @@
         <Domain name="range" id="14382.LineWidth.range"/>
       </Property>
       <Property name="LookupTable" id="14382.LookupTable" number_of_elements="1">
-        <Proxy value="14323"/>
+        <Proxy value="14465"/>
         <Domain name="groups" id="14382.LookupTable.groups"/>
       </Property>
       <Property name="Luminosity" id="14382.Luminosity" number_of_elements="1">
@@ -8683,7 +8683,7 @@
         <Domain name="bool" id="14471.UseCustomLabels.bool"/>
       </Property>
       <Property name="Visibility" id="14471.Visibility" number_of_elements="1">
-        <Element index="0" value="0"/>
+        <Element index="0" value="1"/>
         <Domain name="bool" id="14471.Visibility.bool"/>
       </Property>
       <Property name="WindowLocation" id="14471.WindowLocation" number_of_elements="1">
@@ -9152,7 +9152,7 @@
         <Domain name="bool" id="14485.UseCustomLabels.bool"/>
       </Property>
       <Property name="Visibility" id="14485.Visibility" number_of_elements="1">
-        <Element index="0" value="1"/>
+        <Element index="0" value="0"/>
         <Domain name="bool" id="14485.Visibility.bool"/>
       </Property>
       <Property name="WindowLocation" id="14485.WindowLocation" number_of_elements="1">
@@ -9587,7 +9587,7 @@
     <Proxy group="misc" type="TimeKeeper" id="256" servers="16">
       <Property name="SuppressedTimeSources" id="256.SuppressedTimeSources"/>
       <Property name="Time" id="256.Time" number_of_elements="1">
-        <Element index="0" value="1147"/>
+        <Element index="0" value="1245"/>
         <Domain name="range" id="256.Time.range"/>
       </Property>
       <Property name="TimeLabel" id="256.TimeLabel" number_of_elements="1">
@@ -10369,7 +10369,7 @@
         <Element index="1" value="1290"/>
       </Property>
       <Property name="ViewTime" id="14488.ViewTime" number_of_elements="1">
-        <Element index="0" value="1147"/>
+        <Element index="0" value="1245"/>
         <Domain name="range" id="14488.ViewTime.range"/>
       </Property>
       <Property name="CameraFocalDisk" id="14488.CameraFocalDisk" number_of_elements="1">
