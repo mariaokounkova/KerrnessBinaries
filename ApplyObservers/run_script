@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+CODE_HOME=~/spec_main
+DATA_HOME=/mnt/ceph/users/mokounkova/Kerrness_0p0_0p0_HeadOn
+MPIRUN=$(GetMpiCmd -p 24)
+
+keep=$(pwd)
+
+for dir in Lev1_AC
+do
+  echo ${dir}
+  mkdir -p ${dir}
+  cd ${dir}
+  cp ${keep}/ApplyObservers.input .
+  cp $DATA_HOME/Ev/${dir}/Run/Hist-Func* .
+  cp $DATA_HOME/Ev/${dir}/Run/SpatialCoordMap.input .
+  $MPIRUN ApplyObservers -t psi -r 11 -d 4 -dir "${DATA_HOME}/Ev/${dir}/Run" -domaininput "GrDomain.input" -v ApplyObservers.input
+  cd ${keep}
+done

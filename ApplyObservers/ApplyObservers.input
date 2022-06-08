@@ -1,0 +1,19 @@
+# ApplyObservers.input
+DataBoxItems =
+  ReadFromFile(File=SpatialCoordMap.input),
+  Subdomain
+    (Items =
+      GlobalDifferentiator(
+        GlobalDifferentiator = Standard(
+            TopologicalDifferentiator = Spectral;
+        );
+      ),
+  );
+
+Observers =
+  NormOfTensor(Input=psi; Filename=Quantities.dat;
+                Op=L2;MetricForTensors=None;
+                EachSubdomainSeparately=false;),
+
+
+
