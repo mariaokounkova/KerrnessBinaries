@@ -2,15 +2,14 @@
 
 DATA_HOME=/mnt/ceph/users/mokounkova/Kerrness_0p0_0p0_q1
 Lev=2
+
 OBS_DIR="Observation_$(basename $DATA_HOME)_Lev${Lev}"
-echo $OBS_DIR
-mkdir $OBS_DIR
 MPIRUN=$(GetMpiCmd -p 48)
 keep=$(pwd)
 
 ## Run apply observers on the dirs
 cd ${DATA_HOME}/Ev
-for dir in Lev${Lev}_[A-Z][A-Z] #Lev${Lev}_Ringdown/Lev${Lev}_[A-Z][A-Z]
+for dir in Lev2_Ringdown/Lev2_AA #Lev${Lev}_[A-Z][A-Z] Lev${Lev}_Ringdown/Lev${Lev}_[A-Z][A-Z]
 do
   echo ${dir}
   if [ ! -f ${dir}/Run/Vars* ]; then
@@ -24,11 +23,20 @@ do
   cp ${keep}/ApplyObservers.input .
   cp $DATA_HOME/Ev/${dir}/Run/Hist-Func* .
   cp $DATA_HOME/Ev/${dir}/Run/SpatialCoordMap.input .
-  $MPIRUN ApplyObservers -t psi,kappa -r 11,122 -d 4,4 -dir "${DATA_HOME}/Ev/${dir}/Run" -domaininput "GrDomain.input" -v ApplyObservers.input
-  cd ${keep}
+  if [[ $dir == *"Ringdown"* ]]; then
+    echo "Processing a ringdown"
+    $(GetMpiCmd -p 24) ApplyObservers -t psi,kappa -r 11,122 -d 4,4 -dir "${DATA_HOME}/Ev/${dir}/Run" -domaininput "GrDomain.input" -v ApplyObservers.input
+  else
+    $MPIRUN ApplyObservers -t psi,kappa -r 11,122 -d 4,4 -dir "${DATA_HOME}/Ev/${dir}/Run" -domaininput "GrDomain.input" -v ApplyObservers.input
+  fi
+  cd ${DATA_HOME}/Ev
 done
 
+cd ${keep}
+
 ## Combine the directories
+echo $OBS_DIR
+mkdir $OBS_DIR
 cat Lev${Lev}_[A-Z][A-Z]/DataVtk.pvd >> ${OBS_DIR}/DataVtk.pvd
 cat Lev${Lev}_Ringdown/Lev${Lev}_[A-Z][A-Z]/DataVtk.pvd >> ${OBS_DIR}/DataVtk.pvd
 ~/KerrnessBinaries/CleanVtk ${OBS_DIR}/DataVtk.pvd
