@@ -8,12 +8,36 @@ DataBoxItems =
             TopologicalDifferentiator = Spectral;
         );
       ),
+      ## Add all necessary 3+1 items, including quantities dependent on the 
+      ## derivative of kappa
+      Add3Plus1ItemsFromGhPsiKappa(psi=psi;kappa=kappa;OutputPrefix=),
+      FirstDeriv(Input=kappa; Output = dkappa; MapPrefix=GridToInertial),
+      Add3Plus1ItemsFromGhDerivs(kappa=kappa; dkappa=dkappa;
+                                  OutputPrefix=; SpatialDim=3;),
+      # Electric and Magnetic - Magnetic with sign flipped 
+      # Please see Appendix B of 1705.07924 for a node on sign conventions
+      WeylElectric(Output = E; Ricci = SpatialRicci; ExCurv = K;
+                                      Invg = Invg;Ricci4Flat=True),
+      WeylMagnetic(Output = B; CdK=CdK; g=g; SqrtDetg=NegSqrtDetg),
+      EvaluateScalarFormula(Output = NegSqrtDetg; Formula = -1.0*A; 
+                                                  A = SqrtDetg),
+
+      # Add the Kerrness quantities
+      AddKerrnessItems(g = g; Invg = Invg; SqrtDetg = SqrtDetg; K = K; 
+                       ElectricWeyl = E; MagneticWeyl = B;
+                       SpatialChristoffel2ndKind = SpatialChristoffel2ndKind;
+                       SpatialRicci = SpatialRicci; dK = dK;
+                       MapPrefix = GridToInertial;);
   );
 
 Observers =
-  NormOfTensor(Input=psi; Filename=Quantities.dat;
-                Op=L2;MetricForTensors=None;
-                EachSubdomainSeparately=false;),
-
+  #NormOfTensor(Input=SpecialityAbs; #, TypeD1Abs, TypeD2Abs, 
+  #                                  #TypeD3Abs, TypeD4Abs, 
+  #                                  #Kerr1Abs, Kerr2Abs; 
+  #                                  Filename=Quantities.dat;
+  #              Op=L2;MetricForTensors=None;
+  #              EachSubdomainSeparately=false;),
+ConvertToVtk(Coords = GridToInertial::MappedCoords;
+           Input = SpecialityAbs; Basename = DataVtk;)
 
 
