@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FILE=DataVtk.pvd
+FILE=$1 #DataVtk.pvd
 CF=DataVtkCleaned.pvd
 
 ## Prologue

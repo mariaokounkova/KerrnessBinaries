@@ -1,19 +1,38 @@
 #!/bin/bash -e
 
-CODE_HOME=~/spec_main
-DATA_HOME=/mnt/ceph/users/mokounkova/Kerrness_0p0_0p0_HeadOn
-MPIRUN=$(GetMpiCmd -p 24)
-
+DATA_HOME=/mnt/ceph/users/mokounkova/Kerrness_0p0_0p0_q1
+Lev=2
+OBS_DIR="Observation_$(basename $DATA_HOME)_Lev${Lev}"
+echo $OBS_DIR
+mkdir $OBS_DIR
+MPIRUN=$(GetMpiCmd -p 48)
 keep=$(pwd)
 
-for dir in Lev1_AC
+## Run apply observers on the dirs
+cd ${DATA_HOME}/Ev
+for dir in Lev${Lev}_[A-Z][A-Z] #Lev${Lev}_Ringdown/Lev${Lev}_[A-Z][A-Z]
 do
   echo ${dir}
+  if [ ! -f ${dir}/Run/Vars* ]; then
+    echo "No volume data for ${dir}"
+    continue
+  fi
+  echo "Processing volume data for ${dir}"
+  cd ${keep}
   mkdir -p ${dir}
   cd ${dir}
   cp ${keep}/ApplyObservers.input .
   cp $DATA_HOME/Ev/${dir}/Run/Hist-Func* .
   cp $DATA_HOME/Ev/${dir}/Run/SpatialCoordMap.input .
-  $MPIRUN ApplyObservers -t psi -r 11 -d 4 -dir "${DATA_HOME}/Ev/${dir}/Run" -domaininput "GrDomain.input" -v ApplyObservers.input
+  $MPIRUN ApplyObservers -t psi,kappa -r 11,122 -d 4,4 -dir "${DATA_HOME}/Ev/${dir}/Run" -domaininput "GrDomain.input" -v ApplyObservers.input
   cd ${keep}
 done
+
+## Combine the directories
+cat Lev${Lev}_[A-Z][A-Z]/DataVtk.pvd >> ${OBS_DIR}/DataVtk.pvd
+cat Lev${Lev}_Ringdown/Lev${Lev}_[A-Z][A-Z]/DataVtk.pvd >> ${OBS_DIR}/DataVtk.pvd
+/mnt/home/mokounkova/KerrnessBinaries/CleanVtk ${OBS_DIR}/DataVtk.pvd
+mkdir ${OBS_DIR}/DataVtk
+ln -s Lev${Lev}_[A-Z][A-Z]/DataVtk/* ${OBS_DIR}/DataVtk
+ln -s Lev${Lev}_Ringdown/Lev${Lev}_[A-Z][A-Z]/DataVtk/* ${OBS_DIR}/DataVtk
+
