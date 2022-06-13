@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 DATA_HOME=/mnt/ceph/users/mokounkova/Kerrness_0p0_0p0_q1
-Lev=2
+Lev=4
 
 OBS_DIR="Observation_$(basename $DATA_HOME)_Lev${Lev}"
 MPIRUN=$(GetMpiCmd -p 48)
@@ -9,7 +9,7 @@ keep=$(pwd)
 
 ## Run apply observers on the dirs
 cd ${DATA_HOME}/Ev
-for dir in Lev2_Ringdown/Lev2_AA #Lev${Lev}_[A-Z][A-Z] Lev${Lev}_Ringdown/Lev${Lev}_[A-Z][A-Z]
+for dir in Lev${Lev}_[A-Z][A-Z] Lev${Lev}_Ringdown/Lev${Lev}_[A-Z][A-Z]
 do
   echo ${dir}
   if [ ! -f ${dir}/Run/Vars* ]; then
@@ -27,6 +27,7 @@ do
     echo "Processing a ringdown"
     $(GetMpiCmd -p 24) ApplyObservers -t psi,kappa -r 11,122 -d 4,4 -dir "${DATA_HOME}/Ev/${dir}/Run" -domaininput "GrDomain.input" -v ApplyObservers.input
   else
+    echo "Processing an inspiral"
     $MPIRUN ApplyObservers -t psi,kappa -r 11,122 -d 4,4 -dir "${DATA_HOME}/Ev/${dir}/Run" -domaininput "GrDomain.input" -v ApplyObservers.input
   fi
   cd ${DATA_HOME}/Ev

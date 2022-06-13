@@ -38,6 +38,6 @@ Observers =
   #              Op=L2;MetricForTensors=None;
   #              EachSubdomainSeparately=false;),
 ConvertToVtk(Coords = GridToInertial::MappedCoords;
-           Input = SpecialityAbs; Basename = DataVtk;)
+           Input = SpecialityAbs, TypeD1Abs, TypeD2Abs; Basename = DataVtk;)
 
 
