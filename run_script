@@ -31,8 +31,8 @@ done
 ## Combine the directories
 cat Lev${Lev}_[A-Z][A-Z]/DataVtk.pvd >> ${OBS_DIR}/DataVtk.pvd
 cat Lev${Lev}_Ringdown/Lev${Lev}_[A-Z][A-Z]/DataVtk.pvd >> ${OBS_DIR}/DataVtk.pvd
-/mnt/home/mokounkova/KerrnessBinaries/CleanVtk ${OBS_DIR}/DataVtk.pvd
+~/KerrnessBinaries/CleanVtk ${OBS_DIR}/DataVtk.pvd
 mkdir ${OBS_DIR}/DataVtk
-ln -s Lev${Lev}_[A-Z][A-Z]/DataVtk/* ${OBS_DIR}/DataVtk
-ln -s Lev${Lev}_Ringdown/Lev${Lev}_[A-Z][A-Z]/DataVtk/* ${OBS_DIR}/DataVtk
+mv Lev${Lev}_[A-Z][A-Z]/DataVtk/* ${OBS_DIR}/DataVtk
+mv Lev${Lev}_Ringdown/Lev${Lev}_[A-Z][A-Z]/DataVtk/* ${OBS_DIR}/DataVtk
 
