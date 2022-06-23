@@ -17,7 +17,7 @@ umask 0022
 set -x
 export PATH=$(pwd -P)/bin:$PATH
 
-./run_script 2
-./run_script 3
+#./run_script 2
+#./run_script 3
 ./run_script 4
 

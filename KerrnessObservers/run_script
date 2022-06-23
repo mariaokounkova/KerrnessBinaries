@@ -29,10 +29,10 @@ do
   ## Note can include -v flag for verbose output
   if [[ $dir == *"Ringdown"* ]]; then
     echo "Processing a ringdown"
-    $(GetMpiCmd -p 24) ApplyObservers -t psi,kappa -r 11,122 -d 4,4 -dir "${DATA_HOME}/Ev/${dir}/Run" -domaininput "GrDomain.input" ApplyObservers.input
+    $(GetMpiCmd -p 24) ApplyObservers -t psi,kappa -r 11,122 -d 4,4 -s 2 -dir "${DATA_HOME}/Ev/${dir}/Run" -domaininput "GrDomain.input" ApplyObservers.input
   else
     echo "Processing an inspiral"
-    $MPIRUN ApplyObservers -t psi,kappa -r 11,122 -d 4,4 -dir "${DATA_HOME}/Ev/${dir}/Run" -domaininput "GrDomain.input" ApplyObservers.input
+    $MPIRUN ApplyObservers -t psi,kappa -r 11,122 -d 4,4 -s 2 -dir "${DATA_HOME}/Ev/${dir}/Run" -domaininput "GrDomain.input" ApplyObservers.input
   fi
   cd ${DATA_HOME}/Ev
   echo "Finished ${dir}"
