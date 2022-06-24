@@ -1,0 +1,58 @@
+#!/bin/bash -e
+
+## Which resolution you want to run on, eq. Lev=4
+Lev=$1
+
+## Where Ev directory for the volume data lives
+DATA_HOME=/mnt/ceph/users/mokounkova/Kerrness_0p0_0p0_q1
+echo ${DATA_HOME}
+
+OBS_DIR="Observation_$(basename $DATA_HOME)_Lev${Lev}"
+MPIRUN=$(GetMpiCmd -p 48)
+keep=$(pwd)
+
+## Run apply observers on the dirs
+echo "Processing Lev${Lev}"
+cd ${DATA_HOME}/Ev
+## This is going to run on all of the data in a simulation. If you want to 
+## do a test run, choose on segment that has volume data, like Lev4_AH 
+for dir in Lev${Lev}_[A-Z][A-Z] Lev${Lev}_Ringdown/Lev${Lev}_[A-Z][A-Z]
+do
+  echo "Processing ${dir}"
+  if [ ! -f ${dir}/Run/Vars* ]; then
+    echo "No volume data for ${dir}"
+    continue
+  fi
+  echo "Processing volume data for ${dir}"
+  cd ${keep}
+  mkdir -p ${dir}
+  cd ${dir}
+  cp ${keep}/ApplyObservers.input .
+  cp $DATA_HOME/Ev/${dir}/Run/Hist-Func* .
+  cp $DATA_HOME/Ev/${dir}/Run/SpatialCoordMap.input .
+  ## Note can include -v flag for verbose output
+  if [[ $dir == *"Ringdown"* ]]; then
+    echo "Processing a ringdown"
+    $(GetMpiCmd -p 24) ApplyObservers -t psi,kappa -r 11,122 -d 4,4 -s 2 -dir "${DATA_HOME}/Ev/${dir}/Run" -domaininput "GrDomain.input" ApplyObservers.input
+  else
+    echo "Processing an inspiral"
+    $MPIRUN ApplyObservers -t psi,kappa -r 11,122 -d 4,4 -s 2 -dir "${DATA_HOME}/Ev/${dir}/Run" -domaininput "GrDomain.input" ApplyObservers.input
+  fi
+  cd ${DATA_HOME}/Ev
+  echo "Finished ${dir}"
+done
+
+cd ${keep}
+
+## Combine the directories
+echo "Preparing ${OBS_DIR}"
+mkdir $OBS_DIR
+cat Lev${Lev}_[A-Z][A-Z]/DataVtk.pvd >> ${OBS_DIR}/DataVtk.pvd
+cat Lev${Lev}_Ringdown/Lev${Lev}_[A-Z][A-Z]/DataVtk.pvd >> ${OBS_DIR}/DataVtk.pvd
+~/KerrnessBinaries/CleanVtk ${OBS_DIR}/DataVtk.pvd
+mkdir ${OBS_DIR}/DataVtk
+echo "Moving inspiral data"
+mv Lev${Lev}_[A-Z][A-Z]/DataVtk/* ${OBS_DIR}/DataVtk
+echo "Moving ringdown data"
+mv Lev${Lev}_Ringdown/Lev${Lev}_[A-Z][A-Z]/DataVtk/* ${OBS_DIR}/DataVtk
+echo "Finished Lev${Lev}"

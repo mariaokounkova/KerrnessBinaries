@@ -1,0 +1,27 @@
+# ApplyObservers.input
+DataBoxItems =
+  ## Read in the coordinate map
+  ReadFromFile(File=SpatialCoordMap.input),
+  Subdomain
+    (Items =
+      ## Create a differentiator object in case we need to compute
+      ## derivatives
+      GlobalDifferentiator(
+        GlobalDifferentiator = Standard(
+            TopologicalDifferentiator = Spectral;
+        );
+      ),
+      ## Compute standard quantities from psi, the spacetime metric, 
+      ## and kappa, which stores the derivatives of the spacetime metric.
+      ## This will add Shift, Lapse, and other variables
+      Add3Plus1ItemsFromGhPsiKappa(psi=psi;kappa=kappa;OutputPrefix=),
+  );
+
+Observers =
+## Make paraview files of the Lapse on the computational domain
+## For more documentation, see 
+## https://sxs-test.black-holes.org/doxygen/classObservers_1_1ConvertToVtk.html
+ConvertToVtk(Coords = GridToInertial::MappedCoords;
+           Input = Lapse; Basename = DataVtk;)
+
+
